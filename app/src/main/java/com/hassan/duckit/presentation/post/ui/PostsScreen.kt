@@ -2,6 +2,7 @@ package com.hassan.duckit.presentation.post.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -9,13 +10,16 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.hassan.duckit.presentation.post.model.DuckPost
+import com.hassan.duckit.ui.theme.DuckItTheme
 
 @Composable
 fun PostsScreen(
@@ -39,8 +43,16 @@ fun PostsScreen(
         },
         floatingActionButton = {
             if (isAuthenticated) {
-                FloatingActionButton(onClick = onNavigateToCreatePost) {
-                    Icon(Icons.Default.Add, "Create Post")
+                FloatingActionButton(
+                    onClick = onNavigateToCreatePost,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Create Post",
+                        modifier = Modifier.size(24.dp)
+                    )
                 }
             }
         }
@@ -70,8 +82,10 @@ fun PostsScreen(
 @Preview(showBackground = true,)
 @Composable
 fun PostsScreenPreview() {
-    PostsScreen(
-        onNavigateToAuth = {},
-        onNavigateToCreatePost = {}
-    )
+    DuckItTheme {
+        PostsScreen(
+            onNavigateToAuth = {},
+            onNavigateToCreatePost = {}
+        )
+    }
 }

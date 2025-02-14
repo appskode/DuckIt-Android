@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -23,73 +24,80 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.hassan.duckit.ui.theme.DuckItTheme
 
 @Composable
 fun CreatePostScreen(
-    onPostCreated: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
     var headline by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        TopAppBar(
-            title = { Text("Create Post") },
-            navigationIcon = {
-                IconButton(onClick = onPostCreated) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Create Post") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                    }
                 }
-            }
-        )
-
-        OutlinedTextField(
-            value = headline,
-            onValueChange = { headline = it },
-            label = { Text("Headline") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
-
-        OutlinedTextField(
-            value = imageUrl,
-            onValueChange = { imageUrl = it },
-            label = { Text("Image URL") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
-
-        if (imageUrl.isNotEmpty()) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(vertical = 8.dp),
-                contentScale = ContentScale.Crop
             )
         }
-
-        Button(
-            onClick = { /* TODO */ },
+    ) { padding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            enabled = headline.isNotEmpty() && imageUrl.isNotEmpty()
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 16.dp)
         ) {
-            Text("Create Post")
+            OutlinedTextField(
+                value = headline,
+                onValueChange = { headline = it },
+                label = { Text("Headline") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = imageUrl,
+                onValueChange = { imageUrl = it },
+                label = { Text("Image URL") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
+            if (imageUrl.isNotEmpty()) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(vertical = 8.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            Button(
+                onClick = { /* TODO */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                enabled = headline.isNotEmpty() && imageUrl.isNotEmpty()
+            ) {
+                Text("Create Post")
+            }
         }
     }
 }
 
-@Preview(showBackground = true, widthDp = 360, heightDp = 640)
+@Preview(showBackground = true,)
 @Composable
 fun CreatePostScreenPreview() {
-    CreatePostScreen(onPostCreated = {})
+    DuckItTheme {
+        CreatePostScreen(onNavigateBack = {})
+    }
 }
-

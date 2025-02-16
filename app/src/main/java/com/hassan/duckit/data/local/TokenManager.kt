@@ -17,6 +17,7 @@ class TokenManager @Inject constructor(
         val AUTH_TOKEN = stringPreferencesKey(AUTH_TOKEN_KEY_STRING)
     }
 
+    // token can be encrypted before saving using key store
     suspend fun saveToken(token: String) {
         dataStore.edit { preferences ->
             preferences[AUTH_TOKEN] = token

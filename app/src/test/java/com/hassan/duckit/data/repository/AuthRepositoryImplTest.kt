@@ -13,6 +13,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import retrofit2.Response
+import java.security.MessageDigest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -38,10 +39,13 @@ class AuthRepositoryImplTest {
         // Given
         val email = "test@example.com"
         val password = "password"
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hashBytes = digest.digest(password.toByteArray())
+        val expectedHash = hashBytes.joinToString("") { "%02x".format(it) }
         val fakeToken = "fake_token"
         val mockResponse = Response.success(AuthResponse(fakeToken))
 
-        `when`(api.signIn(AuthRequest(email, password))).thenReturn(mockResponse)
+        `when`(api.signIn(AuthRequest(email, expectedHash))).thenReturn(mockResponse)
 
         // When
         val result = authRepository.signIn(email, password)
@@ -104,10 +108,13 @@ class AuthRepositoryImplTest {
         // Given
         val email = "newuser@example.com"
         val password = "password"
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hashBytes = digest.digest(password.toByteArray())
+        val expectedHash = hashBytes.joinToString("") { "%02x".format(it) }
         val fakeToken = "fake_token"
         val mockResponse = Response.success(AuthResponse(fakeToken))
 
-        `when`(api.signUp(AuthRequest(email, password))).thenReturn(mockResponse)
+        `when`(api.signUp(AuthRequest(email, expectedHash))).thenReturn(mockResponse)
 
         // When
         val result = authRepository.signUp(email, password)

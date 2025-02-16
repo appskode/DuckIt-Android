@@ -11,6 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
+// all can be separated into different services for each feature
 interface DuckItService {
     @POST("signin")
     suspend fun signIn(

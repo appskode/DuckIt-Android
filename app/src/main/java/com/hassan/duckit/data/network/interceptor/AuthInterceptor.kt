@@ -15,6 +15,8 @@ class AuthInterceptor @Inject constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
 
+        // qualifiers can be used for providing authorized and unauthorized retrofit instances
+        // for some reason voting has issues with the authorization header
         if (originalRequest.url.encodedPath.contains("/signin") ||
             originalRequest.url.encodedPath.contains("/signup") ||
             originalRequest.url.encodedPath.contains("/upvote") ||

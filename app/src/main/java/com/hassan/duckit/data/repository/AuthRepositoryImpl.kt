@@ -4,6 +4,7 @@ import com.hassan.duckit.data.api.service.DuckItService
 import com.hassan.duckit.data.api.models.AuthRequest
 import com.hassan.duckit.data.local.TokenManager
 import com.hassan.duckit.domain.repository.AuthRepository
+import java.security.MessageDigest
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,7 +15,7 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
     override suspend fun signIn(email: String, password: String): Result<Unit> {
         return try {
-            val response = api.signIn(AuthRequest(email, password))
+            val response = api.signIn(AuthRequest(email, hashInput(password)))
             when {
                 response.isSuccessful -> {
                     response.body()?.token?.let { token ->
@@ -33,7 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signUp(email: String, password: String): Result<Unit> {
         return try {
-            val response = api.signUp(AuthRequest(email, password))
+            val response = api.signUp(AuthRequest(email, hashInput(password)))
             when {
                 response.isSuccessful -> {
                     response.body()?.token?.let { token ->
@@ -55,5 +56,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun clearToken() {
         tokenManager.clearToken()
+    }
+
+    private fun hashInput(input: String): String {
+        // this is just some basic hashing for now
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hashBytes = digest.digest(input.toByteArray())
+        return hashBytes.joinToString("") { "%02x".format(it) }
     }
 }

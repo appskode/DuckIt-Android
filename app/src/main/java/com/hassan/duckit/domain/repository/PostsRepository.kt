@@ -1,6 +1,6 @@
 package com.hassan.duckit.domain.repository
 
-import com.hassan.duckit.presentation.post.model.DuckPost
+import com.hassan.duckit.domain.model.DuckPost
 
 interface PostsRepository {
     suspend fun getPosts(): Result<List<DuckPost>>

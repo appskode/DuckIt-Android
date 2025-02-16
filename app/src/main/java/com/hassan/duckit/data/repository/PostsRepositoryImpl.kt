@@ -2,7 +2,7 @@ package com.hassan.duckit.data.repository
 
 import com.hassan.duckit.data.api.DuckItService
 import com.hassan.duckit.domain.repository.PostsRepository
-import com.hassan.duckit.presentation.post.model.DuckPost
+import com.hassan.duckit.domain.model.DuckPost
 import javax.inject.Inject
 
 class PostsRepositoryImpl @Inject constructor(

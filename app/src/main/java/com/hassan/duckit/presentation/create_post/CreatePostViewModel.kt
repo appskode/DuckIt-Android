@@ -3,6 +3,7 @@ package com.hassan.duckit.presentation.create_post
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hassan.duckit.domain.repository.CreatePostRepository
+import com.hassan.duckit.util.Validation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,12 +27,44 @@ class CreatePostViewModel @Inject constructor(
     fun onAction(action: CreatePostScreenAction) {
         when (action) {
             is CreatePostScreenAction.UpdateHeadline -> {
-                _uiState.update { it.copy(headline = action.headline) }
+                _uiState.update {
+                    it.copy(
+                        headline = action.headline,
+                        headlineError = when (val result = Validation.validateHeadline(action.headline)) {
+                            is Validation.ValidationResult.Error -> result.message
+                            is Validation.ValidationResult.Success -> null
+                        }
+                    )
+                }
             }
             is CreatePostScreenAction.UpdateImageUrl -> {
-                _uiState.update { it.copy(imageUrl = action.url) }
+                _uiState.update {
+                    it.copy(
+                        imageUrl = action.url,
+                        imageUrlError = when (val result = Validation.validateImageUrl(action.url)) {
+                            is Validation.ValidationResult.Error -> result.message
+                            is Validation.ValidationResult.Success -> null
+                        }
+                    )
+                }
             }
-            CreatePostScreenAction.Submit -> createPost()
+            CreatePostScreenAction.Submit -> {
+                val state = _uiState.value
+                val headlineValidation = Validation.validateHeadline(state.headline)
+                val imageUrlValidation = Validation.validateImageUrl(state.imageUrl)
+
+                if (headlineValidation is Validation.ValidationResult.Success &&
+                    imageUrlValidation is Validation.ValidationResult.Success) {
+                    createPost()
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            headlineError = (headlineValidation as? Validation.ValidationResult.Error)?.message,
+                            imageUrlError = (imageUrlValidation as? Validation.ValidationResult.Error)?.message
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -58,8 +91,16 @@ data class CreatePostScreenState(
     val headline: String = "",
     val imageUrl: String = "",
     val isLoading: Boolean = false,
-    val error: String? = null
-)
+    val error: String? = null,
+    val headlineError: String? = null,
+    val imageUrlError: String? = null
+) {
+    val isValid: Boolean
+        get() = headline.isNotBlank() &&
+                imageUrl.isNotBlank() &&
+                headlineError == null &&
+                imageUrlError == null
+}
 
 sealed interface CreatePostScreenEvent {
     data object PostCreated : CreatePostScreenEvent

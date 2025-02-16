@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hassan.duckit.domain.repository.AuthRepository
 import com.hassan.duckit.domain.repository.PostsRepository
-import com.hassan.duckit.presentation.post.model.DuckPost
+import com.hassan.duckit.domain.model.DuckPost
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

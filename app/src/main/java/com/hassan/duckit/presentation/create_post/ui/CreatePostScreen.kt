@@ -87,7 +87,16 @@ private fun CreatePostContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                enabled = !state.isLoading
+                enabled = !state.isLoading,
+                isError = state.headlineError != null,
+                supportingText = {
+                    state.headlineError?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
             OutlinedTextField(
@@ -97,10 +106,19 @@ private fun CreatePostContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                enabled = !state.isLoading
+                enabled = !state.isLoading,
+                isError = state.imageUrlError != null,
+                supportingText = {
+                    state.imageUrlError?.let {
+                        Text(
+                            text = it,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
-            if (state.imageUrl.isNotEmpty()) {
+            if (state.imageUrl.isNotEmpty() && state.imageUrlError == null) {
                 AsyncImage(
                     model = state.imageUrl,
                     contentDescription = null,
@@ -125,9 +143,7 @@ private fun CreatePostContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                enabled = !state.isLoading &&
-                        state.headline.isNotEmpty() &&
-                        state.imageUrl.isNotEmpty()
+                enabled = !state.isLoading && state.isValid
             ) {
                 if (state.isLoading) {
                     CircularProgressIndicator(

@@ -1,6 +1,6 @@
 package com.hassan.duckit.presentation.preview
 
-import com.hassan.duckit.presentation.post.model.DuckPost
+import com.hassan.duckit.domain.model.DuckPost
 
 object PreviewData {
     val samplePosts = listOf(

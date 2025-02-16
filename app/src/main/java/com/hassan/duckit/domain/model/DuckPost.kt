@@ -1,4 +1,4 @@
-package com.hassan.duckit.presentation.post.model
+package com.hassan.duckit.domain.model
 
 data class DuckPost(
     val id: String,

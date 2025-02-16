@@ -5,35 +5,63 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.hassan.duckit.presentation.create_post.CreatePostScreenAction
+import com.hassan.duckit.presentation.create_post.CreatePostScreenEvent
+import com.hassan.duckit.presentation.create_post.CreatePostScreenState
+import com.hassan.duckit.presentation.create_post.CreatePostViewModel
 import com.hassan.duckit.ui.theme.DuckItTheme
 
 @Composable
 fun CreatePostScreen(
     onNavigateBack: () -> Unit,
-    onPostCreated: () -> Unit
+    onPostCreated: () -> Unit,
+    viewModel: CreatePostViewModel = hiltViewModel()
 ) {
-    var headline by remember { mutableStateOf("") }
-    var imageUrl by remember { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.createPostEvent.collect { event ->
+            when (event) {
+                CreatePostScreenEvent.PostCreated -> onPostCreated()
+            }
+        }
+    }
+
+    CreatePostContent(
+        state = uiState,
+        onAction = viewModel::onAction,
+        onNavigateBack = onNavigateBack
+    )
+}
+
+@Composable
+private fun CreatePostContent(
+    state: CreatePostScreenState,
+    onAction: (CreatePostScreenAction) -> Unit,
+    onNavigateBack: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,26 +81,28 @@ fun CreatePostScreen(
                 .padding(horizontal = 16.dp)
         ) {
             OutlinedTextField(
-                value = headline,
-                onValueChange = { headline = it },
+                value = state.headline,
+                onValueChange = { onAction(CreatePostScreenAction.UpdateHeadline(it)) },
                 label = { Text("Headline") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = !state.isLoading
             )
 
             OutlinedTextField(
-                value = imageUrl,
-                onValueChange = { imageUrl = it },
+                value = state.imageUrl,
+                onValueChange = { onAction(CreatePostScreenAction.UpdateImageUrl(it)) },
                 label = { Text("Image URL") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
+                enabled = !state.isLoading
             )
 
-            if (imageUrl.isNotEmpty()) {
+            if (state.imageUrl.isNotEmpty()) {
                 AsyncImage(
-                    model = imageUrl,
+                    model = state.imageUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -82,26 +112,44 @@ fun CreatePostScreen(
                 )
             }
 
+            if (state.error != null) {
+                Text(
+                    text = state.error,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+
             Button(
-                onClick = { /* TODO */ },
+                onClick = { onAction(CreatePostScreenAction.Submit) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                enabled = headline.isNotEmpty() && imageUrl.isNotEmpty()
+                enabled = !state.isLoading &&
+                        state.headline.isNotEmpty() &&
+                        state.imageUrl.isNotEmpty()
             ) {
-                Text("Create Post")
+                if (state.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text("Create Post")
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true,)
+@Preview(showBackground = true)
 @Composable
 fun CreatePostScreenPreview() {
     DuckItTheme {
-        CreatePostScreen(
+        CreatePostContent(
             onNavigateBack = {},
-            onPostCreated = {}
+            state = CreatePostScreenState(),
+            onAction = {},
         )
     }
 }

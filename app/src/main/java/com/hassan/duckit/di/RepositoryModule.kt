@@ -1,8 +1,10 @@
 package com.hassan.duckit.di
 
 import com.hassan.duckit.data.repository.AuthRepositoryImpl
+import com.hassan.duckit.data.repository.CreatePostRepositoryImpl
 import com.hassan.duckit.data.repository.PostsRepositoryImpl
 import com.hassan.duckit.domain.repository.AuthRepository
+import com.hassan.duckit.domain.repository.CreatePostRepository
 import com.hassan.duckit.domain.repository.PostsRepository
 import dagger.Binds
 import dagger.Module
@@ -24,4 +26,10 @@ interface RepositoryModule {
     fun bindPostsRepository(
         postsRepositoryImpl: PostsRepositoryImpl
     ): PostsRepository
+
+    @Binds
+    @Singleton
+    fun bindCreatePostRepository(
+        createPostRepositoryImpl: CreatePostRepositoryImpl
+    ): CreatePostRepository
 }

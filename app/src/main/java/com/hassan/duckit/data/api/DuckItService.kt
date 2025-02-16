@@ -2,6 +2,7 @@ package com.hassan.duckit.data.api
 
 import com.hassan.duckit.data.api.models.AuthRequest
 import com.hassan.duckit.data.api.models.AuthResponse
+import com.hassan.duckit.data.api.models.CreatePostRequest
 import com.hassan.duckit.data.api.models.PostsResponse
 import com.hassan.duckit.data.api.models.VoteResponse
 import retrofit2.Response
@@ -33,4 +34,9 @@ interface DuckItService {
     suspend fun downVotePost(
         @Path("postId") postId: String
     ): Response<VoteResponse>
+
+    @POST("posts")
+    suspend fun createPost(
+        @Body request: CreatePostRequest
+    ): Response<Unit>
 }

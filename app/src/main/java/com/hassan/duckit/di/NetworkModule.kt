@@ -1,15 +1,16 @@
 package com.hassan.duckit.di
 
 import com.hassan.duckit.core.Constants.BASE_URL
-import com.hassan.duckit.data.api.DuckItService
+import com.hassan.duckit.data.api.service.DuckItService
 import com.hassan.duckit.data.local.TokenManager
 import com.hassan.duckit.data.network.NetworkConfig
 import com.hassan.duckit.data.network.interceptor.AuthInterceptor
-import com.hassan.duckit.domain.repository.AuthRepository
+import com.hassan.duckit.di.qualifier.IODispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -41,8 +42,11 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor {
-        return AuthInterceptor(tokenManager)
+    fun provideAuthInterceptor(
+        tokenManager: TokenManager,
+        @IODispatcher dispatcher: CoroutineDispatcher
+    ): AuthInterceptor {
+        return AuthInterceptor(tokenManager, dispatcher)
     }
 
     @Provides

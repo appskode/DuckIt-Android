@@ -72,6 +72,9 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 # Testing
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -99,4 +102,17 @@ network = [
     "okhttp-core",
     "okhttp-logging",
     "kotlin-serialization"
+]
+testing = [
+    "junit",
+    "kotlin-test",
+    "kotlin-test-junit",
+    "kotlinx-coroutines-test",
+    "mockito-kotlin",
+    "turbine"
+]
+android-testing = [
+    "androidx-junit",
+    "androidx-espresso-core",
+    "androidx-ui-test-junit4"
 ]

@@ -14,7 +14,7 @@ class TokenManager @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
     companion object {
-        private val AUTH_TOKEN = stringPreferencesKey(AUTH_TOKEN_KEY_STRING)
+        val AUTH_TOKEN = stringPreferencesKey(AUTH_TOKEN_KEY_STRING)
     }
 
     suspend fun saveToken(token: String) {

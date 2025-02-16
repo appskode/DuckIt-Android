@@ -1,6 +1,6 @@
 package com.hassan.duckit.data.repository
 
-import com.hassan.duckit.data.api.DuckItService
+import com.hassan.duckit.data.api.service.DuckItService
 import com.hassan.duckit.data.api.models.CreatePostRequest
 import com.hassan.duckit.domain.repository.CreatePostRepository
 import javax.inject.Inject

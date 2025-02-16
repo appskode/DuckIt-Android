@@ -1,4 +1,4 @@
-package com.hassan.duckit.data.api
+package com.hassan.duckit.data.api.service
 
 import com.hassan.duckit.data.api.models.AuthRequest
 import com.hassan.duckit.data.api.models.AuthResponse

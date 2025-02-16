@@ -70,12 +70,12 @@ class PostsViewModel @Inject constructor(
     private fun onUpVote(postId: String) {
         viewModelScope.launch {
             postsRepository.upVotePost(postId)
-                .onSuccess {
+                .onSuccess { updatedUpVotes ->
                     _uiState.update { currentState ->
                         val updatedPosts = currentState.posts.map { post ->
                             if (post.id == postId) {
                                 post.copy(
-                                    upVotes = post.upVotes + 1,
+                                    upVotes = updatedUpVotes,
                                     isUpVoted = true,
                                     isDownVoted = false
                                 )
@@ -86,7 +86,7 @@ class PostsViewModel @Inject constructor(
                 }
                 .onFailure { error ->
                     _uiState.update {
-                        it.copy(error = error.message ?: "Failed to upvote post")
+                        it.copy(error = error.message ?: "Failed to upVote post")
                     }
                 }
         }
@@ -95,12 +95,12 @@ class PostsViewModel @Inject constructor(
     private fun onDownVote(postId: String) {
         viewModelScope.launch {
             postsRepository.downVotePost(postId)
-                .onSuccess {
+                .onSuccess { updatedUpVotes ->
                     _uiState.update { currentState ->
                         val updatedPosts = currentState.posts.map { post ->
                             if (post.id == postId) {
                                 post.copy(
-                                    upVotes = maxOf(0, post.upVotes - 1),
+                                    upVotes = updatedUpVotes,
                                     isDownVoted = true,
                                     isUpVoted = false
                                 )

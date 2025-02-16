@@ -32,19 +32,31 @@ class PostsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun upVotePost(postId: String): Result<Unit> {
+    override suspend fun upVotePost(postId: String): Result<Int> {
         return try {
-            // TODO: Implement actual API call for upVoting
-            Result.success(Unit)
+            val response = api.upVotePost(postId)
+            if (response.isSuccessful) {
+                response.body()?.let { voteResponse ->
+                    Result.success(voteResponse.upVotes)
+                } ?: Result.failure(Exception("Empty upVote response"))
+            } else {
+                Result.failure(Exception("Failed to upVote post: ${response.code()}"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun downVotePost(postId: String): Result<Unit> {
+    override suspend fun downVotePost(postId: String): Result<Int> {
         return try {
-            // TODO: Implement actual API call for downVoting
-            Result.success(Unit)
+            val response = api.downVotePost(postId)
+            if (response.isSuccessful) {
+                response.body()?.let { voteResponse ->
+                    Result.success(voteResponse.upVotes)
+                } ?: Result.failure(Exception("Empty downVote response"))
+            } else {
+                Result.failure(Exception("Failed to downVote post: ${response.code()}"))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }

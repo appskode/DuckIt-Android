@@ -13,8 +13,11 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
 
         // TODO: we can also use qualifiers to avoid adding token to sign in and sign up requests
+        // Right Now the UpVote and DownVote requests are also not accepting a token, adding the token fails them for some reason
         if (originalRequest.url.encodedPath.contains("/signin") ||
-            originalRequest.url.encodedPath.contains("/signup")) {
+            originalRequest.url.encodedPath.contains("/signup") ||
+            originalRequest.url.encodedPath.contains("/upvote") ||
+            originalRequest.url.encodedPath.contains("/downvote")) {
             return chain.proceed(originalRequest)
         }
 

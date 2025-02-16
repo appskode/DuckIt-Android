@@ -3,10 +3,12 @@ package com.hassan.duckit.data.api
 import com.hassan.duckit.data.api.models.AuthRequest
 import com.hassan.duckit.data.api.models.AuthResponse
 import com.hassan.duckit.data.api.models.PostsResponse
+import com.hassan.duckit.data.api.models.VoteResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface DuckItService {
     @POST("signin")
@@ -21,4 +23,14 @@ interface DuckItService {
 
     @GET("posts")
     suspend fun getPosts(): Response<PostsResponse>
+
+    @POST("posts/{postId}/upvote")
+    suspend fun upVotePost(
+        @Path("postId") postId: String
+    ): Response<VoteResponse>
+
+    @POST("posts/{postId}/downvote")
+    suspend fun downVotePost(
+        @Path("postId") postId: String
+    ): Response<VoteResponse>
 }

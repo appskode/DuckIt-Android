@@ -1,7 +1,9 @@
 package com.hassan.duckit.di
 
 import com.hassan.duckit.data.repository.AuthRepositoryImpl
+import com.hassan.duckit.data.repository.PostsRepositoryImpl
 import com.hassan.duckit.domain.repository.AuthRepository
+import com.hassan.duckit.domain.repository.PostsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,4 +18,10 @@ interface RepositoryModule {
     fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    fun bindPostsRepository(
+        postsRepositoryImpl: PostsRepositoryImpl
+    ): PostsRepository
 }

@@ -1,13 +1,13 @@
 package com.hassan.duckit.data.network.interceptor
 
-import com.hassan.duckit.domain.repository.AuthRepository
+import com.hassan.duckit.data.local.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
-    private val authRepository: AuthRepository
+    private val tokenManager: TokenManager
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
@@ -18,7 +18,7 @@ class AuthInterceptor @Inject constructor(
             return chain.proceed(originalRequest)
         }
 
-        val token = runBlocking { authRepository.getStoredToken() }
+        val token = runBlocking { tokenManager.getToken() }
 
         val modifiedRequest = token?.let { authToken ->
             originalRequest.newBuilder()

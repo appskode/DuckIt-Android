@@ -1,7 +1,8 @@
 package com.hassan.duckit.di
 
 import com.hassan.duckit.core.Constants.BASE_URL
-import com.hassan.duckit.data.api.DuckItApi
+import com.hassan.duckit.data.api.DuckItService
+import com.hassan.duckit.data.local.TokenManager
 import com.hassan.duckit.data.network.NetworkConfig
 import com.hassan.duckit.data.network.interceptor.AuthInterceptor
 import com.hassan.duckit.domain.repository.AuthRepository
@@ -40,8 +41,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptor(authRepository: AuthRepository): AuthInterceptor {
-        return AuthInterceptor(authRepository)
+    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor {
+        return AuthInterceptor(tokenManager)
     }
 
     @Provides
@@ -91,7 +92,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideDuckItApi(retrofit: Retrofit): DuckItApi {
-        return retrofit.create(DuckItApi::class.java)
+    fun provideDuckItApi(retrofit: Retrofit): DuckItService {
+        return retrofit.create(DuckItService::class.java)
     }
 }

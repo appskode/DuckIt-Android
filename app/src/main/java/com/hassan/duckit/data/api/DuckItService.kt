@@ -8,7 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface DuckItApi {
+interface DuckItService {
     @POST("signin")
     suspend fun signIn(
         @Body request: AuthRequest

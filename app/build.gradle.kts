@@ -77,7 +77,6 @@ dependencies {
 
     // Network
     implementation(libs.bundles.network)
-    ksp(libs.moshi.codegen)
 
     // Image Loading
     implementation(libs.coil.compose)

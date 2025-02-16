@@ -28,7 +28,8 @@ import com.hassan.duckit.ui.theme.DuckItTheme
 
 @Composable
 fun CreatePostScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onPostCreated: () -> Unit
 ) {
     var headline by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
@@ -98,6 +99,9 @@ fun CreatePostScreen(
 @Composable
 fun CreatePostScreenPreview() {
     DuckItTheme {
-        CreatePostScreen(onNavigateBack = {})
+        CreatePostScreen(
+            onNavigateBack = {},
+            onPostCreated = {}
+        )
     }
 }
